@@ -50,7 +50,7 @@ def write_xnew(x, iteration, output):
             f.write('\n'.join('{:5.4f}'.format(val) for val in x))
             f.write('\n')
 
-def plot_error_vs_iteration(A, b, x0, max_iter = 50, argu = '-g'):
+def plot_error_vs_iteration(A, b, x0, max_iter = 50, argu = '-g', limit = 16):
     n = len(b)
     x = x0
     x_new = np.zeros(n)
@@ -59,13 +59,13 @@ def plot_error_vs_iteration(A, b, x0, max_iter = 50, argu = '-g'):
     error_list = []
     iteration_list = []
     #call gauss_seidel function to get the error and iteration number
-    for limit in range(28, 32):
+    for limit in range(limit, limit+5):
         while iteration < max_iter:
-            if argu == '-g':
+            if argu == 'g':
                 x_new, iteration, error = gs.gauss_seidel(A, b, x, iteration, limit)
-            elif argu == '-j':
+            elif argu == 'j':
                 x_new, iteration, error = jb.jocobi(A, b, x, iteration)
-            if error < 1e-6:
+            if error < 1e-8:
                 break
             error_list.append(error)
             iteration_list.append(iteration)
@@ -78,13 +78,14 @@ def plot_error_vs_iteration(A, b, x0, max_iter = 50, argu = '-g'):
     # show a horizontal line at y = -6
     plt.axhline(y=np.log(1e-6), color='r', linestyle='--')
     plt.xlabel('Iteration')
-    plt.ylabel('Error')
-    plt.title('Error vs Iteration')
+    plt.ylabel('Error (log scale)')
+    plt.title('Error vs Iteration w/ different bits')
     plt.savefig('output/error_vs_iteration.png')  # save the figure to the output folder
     plt.close()  # close the figure
     return x, iteration, error
 
 def write_result(filename, final_x, final_iter, final_error):
+    filename = './output/' + filename
     with open(filename, 'w') as f:
         f.write('Final x:\n')
         f.write('\n'.join('{:5.4f}'.format(val) for val in final_x))

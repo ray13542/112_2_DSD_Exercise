@@ -1,2 +1,1 @@
-python main.py -g ./output/output_gaussian.txt
-python main.py -j ./output/output_jocobian.txt
+python main.py -method g -output output_gaussian.txt -max_iteration 1000 -bit 64
