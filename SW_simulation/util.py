@@ -65,7 +65,7 @@ def plot_error_vs_iteration(A, b, x0, max_iter = 50, argu = '-g', limit = 16):
                 x_new, iteration, error = gs.gauss_seidel(A, b, x, iteration, limit)
             elif argu == 'j':
                 x_new, iteration, error = jb.jocobi(A, b, x, iteration)
-            if error < 1e-8:
+            if error < 1e-6:
                 break
             error_list.append(error)
             iteration_list.append(iteration)
