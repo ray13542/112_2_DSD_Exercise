@@ -1,5 +1,5 @@
 `timescale 1ns/10ps
-`define CYCLE    10           	         // Modify your clock period here
+`define CYCLE    30           	         // Modify your clock period here
 `define SDFFILE  "./GSIM_syn.sdf"	      // Modify your sdf file name
 `define PAT      "./pattern1.dat"    
 `define DEL      1
@@ -24,7 +24,7 @@ real  x_f[0:15];
 real  SquareError, error, temp;
 
 
-   GSIM GSIM( .clk(clk), .reset(reset), .in_en(in_en), .b_in(b_in),
+GSIM GSIM( .clk(clk), .reset(reset), .in_en(in_en), .b_in(b_in),
               .out_valid(out_valid), .x_out(x_out));
    
 
@@ -49,14 +49,15 @@ always begin #(`CYCLE/2) clk = ~clk; end
 initial begin
 $dumpfile("GSIM.vcd");
 $dumpvars;
-//$fsdbDumpfile("GSIM.fsdb");
-//$fsdbDumpvars;
+$fsdbDumpfile("GSIM.fsdb");
+$fsdbDumpvars;
+$fsdbDumpMDA;
 
-   out_f = $fopen("out.dat");
-   if (out_f == 0) begin
-        $display("Output file open error !");
-        $finish;
-   end
+out_f = $fopen("out.dat");
+if (out_f == 0) begin
+      $display("Output file open error !");
+      $finish;
+end
 end
 
 
