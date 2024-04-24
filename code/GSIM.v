@@ -46,6 +46,7 @@ always @(*) begin
         state_UPDATE: nxt_state = (x_addr == 15)? state_XDONE: state_PE;
         state_XDONE : nxt_state = (iter < ITERATION)? state_PE: state_OUTPUT;
         state_OUTPUT: nxt_state = state_OUTPUT;
+        default     : nxt_state = state;
     endcase
 end
 always @(posedge clk) begin
@@ -58,18 +59,33 @@ end
 // Input b values
 //--------------------------------------
 always @(*) begin
-    if (in_en) begin
-        nxt_b[b_addr] = {b_in, 16'b0}; //b_in is 16bit integer
-        nxt_b_addr = b_addr + 1;
-    end
-    else if (state == state_UPDATE) begin // shift b values
-        nxt_b[15] = b[0];
-        for (i = 0;i < 15 ; i = i +1) begin
-            nxt_b[i] = b[i+1];
-        end
+    case (state)
+        state_INPUT: nxt_b_addr = b_addr+1; 
+        default: nxt_b_addr = 0;
+    endcase
+end
+always @(posedge clk) begin
+    if (reset) begin
+        b_addr <= 0;
     end
     else begin
-        nxt_b_addr = 0;
+        b_addr <= nxt_b_addr;
+    end
+end
+
+always @(*) begin
+    if (in_en) begin
+        for (i = 0;i < 16 ; i = i +1) begin
+                nxt_b[i] = (i == b_addr)? {b_in, 16'b0}: b[i];
+            end
+    end
+    else if (state == state_UPDATE)begin
+            nxt_b[15] = b[0];
+            for (i = 0;i < 15 ; i = i +1) begin
+                nxt_b[i] = b[i+1];
+            end
+    end
+    else begin
         for (i = 0;i < 16 ; i = i +1) begin
             nxt_b[i] = b[i];
         end
@@ -80,13 +96,11 @@ always @(posedge clk) begin
         for (i = 0;i < 16 ; i = i +1) begin
             b[i] <= 0;
         end
-        b_addr <= 0;
     end
     else begin
         for (i = 0;i < 16 ; i = i +1) begin
             b[i] <= nxt_b[i];
         end
-        b_addr <= nxt_b_addr;
     end
 end
 //--------------------------------------
@@ -322,9 +336,9 @@ module divide_by20(in_div, res);
     output signed [31:0] res;
     parameter ACCU = 43;
     wire [ACCU : 0] tmp;
-    wire [ACCU - 38:0] res_tmp1;
+    wire [ACCU - 37:0] res_tmp1;
     wire [4:0] res_tmp2;
-    assign tmp = in_div << (ACCU - 37);
+    assign tmp = in_div << (ACCU - 36);
     assign {res_tmp2, res, res_tmp1} =  {{ 5{tmp[ACCU]}}, tmp[ACCU: 5]}+  {{ 6{tmp[ACCU]}}, tmp[ACCU: 6]}+  {{ 9{tmp[ACCU]}}, tmp[ACCU: 9]}+ 
                                         {{10{tmp[ACCU]}}, tmp[ACCU:10]}+  {{15{tmp[ACCU]}}, tmp[ACCU:13]}+  {{14{tmp[ACCU]}}, tmp[ACCU:14]}+
                                         {{17{tmp[ACCU]}}, tmp[ACCU:17]}+  {{18{tmp[ACCU]}}, tmp[ACCU:18]}+  {{21{tmp[ACCU]}}, tmp[ACCU:21]}+

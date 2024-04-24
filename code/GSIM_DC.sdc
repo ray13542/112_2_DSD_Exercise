@@ -17,4 +17,11 @@ set_wire_load_model -name tsmc13_wl10 -library slow
 
 set_max_fanout 20 [all_inputs]
 
-                       
+#Compile and save files
+#You may modified setting of compile 
+#####################################################
+compile_ultra
+write_sdf -version 2.1 GSIM_syn.sdf
+write -format verilog -hier -output GSIM_syn.v
+write -format ddc     -hier -output GSIM_syn.ddc  
+#####################################################
