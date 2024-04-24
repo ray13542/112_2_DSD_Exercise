@@ -330,7 +330,7 @@ module divide_by20(in_div, res);
                                         {{17{tmp[ACCU]}}, tmp[ACCU:17]}+  {{18{tmp[ACCU]}}, tmp[ACCU:18]}+  {{21{tmp[ACCU]}}, tmp[ACCU:21]}+
                                         {{22{tmp[ACCU]}}, tmp[ACCU:22]}+  {{25{tmp[ACCU]}}, tmp[ACCU:25]}+  {{26{tmp[ACCU]}}, tmp[ACCU:26]}+
                                         {{29{tmp[ACCU]}}, tmp[ACCU:29]}+  {{30{tmp[ACCU]}}, tmp[ACCU:30]}+  {{33{tmp[ACCU]}}, tmp[ACCU:33]}+
-                                        {{34{tmp[ACCU]}}, tmp[ACCU:34]}+  {{34{tmp[ACCU]}}, tmp[ACCU:34]}+  {{37{tmp[ACCU]}}, tmp[ACCU:37]};
+                                        {{34{tmp[ACCU]}}, tmp[ACCU:34]};
 
 
 endmodule
